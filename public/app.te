@@ -150,12 +150,17 @@ allow appdomain anr_data_file:file { open append };
 unix_socket_connect(appdomain, tombstoned_java_trace, tombstoned)
 allow appdomain tombstoned:fd use;
 allow appdomain dumpstate:fifo_file append;
+allow appdomain incidentd:fifo_file append;
 
 # Allow apps to send dump information to dumpstate
 allow appdomain dumpstate:fd use;
 allow appdomain dumpstate:unix_stream_socket { read write getopt getattr shutdown };
 allow appdomain dumpstate:fifo_file { write getattr };
 allow appdomain shell_data_file:file { write getattr };
+
+# Allow apps to send dump information to incidentd
+allow appdomain incidentd:fd use;
+allow appdomain incidentd:fifo_file { write getattr };
 
 # Write profiles /data/misc/profiles
 allow appdomain user_profile_data_file:dir { search write add_name };
@@ -219,6 +224,7 @@ binder_call(appdomain, ephemeral_app)
 # TODO(b/36375899): Replace this with hal_client_domain once mediacodec is properly attributized
 # as OMX HAL
 hwbinder_use({ appdomain  -isolated_app })
+allow { appdomain -isolated_app } hal_codec2_hwservice:hwservice_manager find;
 allow { appdomain -isolated_app } hal_omx_hwservice:hwservice_manager find;
 allow { appdomain -isolated_app } hidl_token_hwservice:hwservice_manager find;
 
@@ -254,19 +260,12 @@ allow { appdomain -isolated_app -ephemeral_app } mnt_user_file:dir r_dir_perms;
 allow { appdomain -isolated_app -ephemeral_app } mnt_user_file:lnk_file r_file_perms;
 
 # Read/write visible storage
-allow { appdomain -isolated_app -ephemeral_app } fuse:dir create_dir_perms;
-allow { appdomain -isolated_app -ephemeral_app } fuse:file create_file_perms;
-allow { appdomain -isolated_app -ephemeral_app } sdcardfs:dir create_dir_perms;
-allow { appdomain -isolated_app -ephemeral_app } sdcardfs:file create_file_perms;
+allow { appdomain -isolated_app -ephemeral_app } sdcard_type:dir create_dir_perms;
+allow { appdomain -isolated_app -ephemeral_app } sdcard_type:file create_file_perms;
 # This should be removed if sdcardfs is modified to alter the secontext for its
 # accesses to the underlying FS.
-allow { appdomain -isolated_app -ephemeral_app } { media_rw_data_file vfat }:dir create_dir_perms;
-allow { appdomain -isolated_app -ephemeral_app } { media_rw_data_file vfat }:file create_file_perms;
-
-# Access OBBs (vfat images) mounted by vold (b/17633509)
-# File write access allowed for FDs returned through Storage Access Framework
-allow { appdomain -isolated_app -ephemeral_app } vfat:dir r_dir_perms;
-allow { appdomain -isolated_app -ephemeral_app } vfat:file rw_file_perms;
+allow { appdomain -isolated_app -ephemeral_app } media_rw_data_file:dir create_dir_perms;
+allow { appdomain -isolated_app -ephemeral_app } media_rw_data_file:file create_file_perms;
 
 # Allow apps to use the USB Accessory interface.
 # http://developer.android.com/guide/topics/connectivity/usb/accessory.html
@@ -561,7 +560,7 @@ neverallow {
   appdomain
   -bluetooth
   -system_app
-} bluetooth_prop:file create_file_perms;
+} { bluetooth_a2dp_offload_prop bluetooth_prop exported_bluetooth_prop }:file create_file_perms;
 
 # Apps cannot access proc_uid_time_in_state
 neverallow appdomain proc_uid_time_in_state:file *;

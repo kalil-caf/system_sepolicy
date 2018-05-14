@@ -98,6 +98,9 @@ allow init configfs:dir mounton;
 allow init configfs:dir create_dir_perms;
 allow init configfs:{ file lnk_file } create_file_perms;
 
+# /metadata
+allow init metadata_file:dir mounton;
+
 # Use tmpfs as /data, used for booting when /data is encrypted
 allow init tmpfs:dir relabelfrom;
 
@@ -325,11 +328,6 @@ allow init {
 
 # Allow init to write to vibrator/trigger
 allow init sysfs_vibrator:file w_file_perms;
-
-# Creating files on sysfs is impossible so this isn't a threat.
-# We may write to a non-existent file to avoid conditional
-# init behavior.
-dontaudit init sysfs_vibrator:dir write;
 
 # init chmod/chown access to /sys files.
 allow init {

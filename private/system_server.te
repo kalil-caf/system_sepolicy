@@ -105,6 +105,7 @@ allow system_server appdomain:process { getsched setsched };
 allow system_server audioserver:process { getsched setsched };
 allow system_server hal_audio:process { getsched setsched };
 allow system_server hal_bluetooth:process { getsched setsched };
+allow system_server mediacodec:process { getsched setsched };
 allow system_server cameraserver:process { getsched setsched };
 allow system_server hal_camera:process { getsched setsched };
 allow system_server mediaserver:process { getsched setsched };
@@ -113,6 +114,7 @@ allow system_server bootanim:process { getsched setsched };
 # Allow system_server to write to /proc/<pid>/timerslack_ns
 allow system_server appdomain:file w_file_perms;
 allow system_server audioserver:file w_file_perms;
+allow system_server mediacodec:file w_file_perms;
 allow system_server cameraserver:file w_file_perms;
 allow system_server hal_audio_server:file w_file_perms;
 
@@ -138,6 +140,10 @@ allow system_server proc_sysrq:file rw_file_perms;
 # Read /sys/kernel/debug/wakeup_sources.
 allow system_server debugfs:file r_file_perms;
 allow system_server debugfs_wakeup_sources:file r_file_perms;
+
+# Delete /data/misc/stats-data/ and /data/misc/stats-service/ directories.
+allow system_server stats_data_file:dir { open read remove_name search write };
+allow system_server stats_data_file:file unlink;
 
 # The DhcpClient and WifiWatchdog use packet_sockets
 allow system_server self:packet_socket create_socket_perms_no_ioctl;
@@ -195,6 +201,7 @@ hal_client_domain(system_server, hal_light)
 hal_client_domain(system_server, hal_memtrack)
 hal_client_domain(system_server, hal_neuralnetworks)
 hal_client_domain(system_server, hal_oemlock)
+allow system_server hal_codec2_hwservice:hwservice_manager find;
 allow system_server hal_omx_hwservice:hwservice_manager find;
 allow system_server hidl_token_hwservice:hwservice_manager find;
 hal_client_domain(system_server, hal_power)
@@ -367,10 +374,11 @@ allow system_server anr_data_file:file create_file_perms;
 #
 # Allow system_server to connect and write to the tombstoned java trace socket in
 # order to dump its traces. Also allow the system server to write its traces to
-# dumpstate during bugreport capture.
+# dumpstate during bugreport capture and incidentd during incident collection.
 unix_socket_connect(system_server, tombstoned_java_trace, tombstoned)
 allow system_server tombstoned:fd use;
 allow system_server dumpstate:fifo_file append;
+allow system_server incidentd:fifo_file append;
 
 # Read /data/misc/incidents - only read. The fd will be sent over binder,
 # with no DAC access to it, for dropbox to read.
@@ -447,7 +455,7 @@ allow system_server system_app_data_file:file create_file_perms;
 
 # Receive and use open app data files passed over binder IPC.
 # Types extracted from seapp_contexts type= fields.
-allow system_server { system_app_data_file bluetooth_data_file nfc_data_file radio_data_file shell_data_file app_data_file }:file { getattr read write append };
+allow system_server { system_app_data_file bluetooth_data_file nfc_data_file radio_data_file shell_data_file app_data_file }:file { getattr read write append map };
 
 # Access to /data/media for measuring disk usage.
 allow system_server media_rw_data_file:dir { search getattr open read };

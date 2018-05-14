@@ -1,4 +1,4 @@
-type statsd, domain;
+type statsd, domain, mlstrustedsubject;
 typeattribute statsd coredomain;
 
 init_daemon_domain(statsd)
@@ -30,6 +30,9 @@ allow statsd stats_data_file:file create_file_perms;
 binder_call(statsd, appdomain)
 binder_call(statsd, healthd)
 binder_call(statsd, incidentd)
+userdebug_or_eng(`
+  binder_call(statsd, perfprofd)
+')
 binder_call(statsd, statscompanion_service)
 binder_call(statsd, system_server)
 
@@ -70,6 +73,7 @@ binder_call(statsd, stats)
 
 # Allow access to with hardware layer and process stats.
 allow statsd proc_uid_cputime_showstat:file { getattr open read };
+hal_client_domain(statsd, hal_health)
 hal_client_domain(statsd, hal_power)
 hal_client_domain(statsd, hal_thermal)
 
@@ -77,6 +81,13 @@ hal_client_domain(statsd, hal_thermal)
 allow statsd adbd:fd use;
 allow statsd adbd:unix_stream_socket { getattr read write };
 allow statsd shell:fifo_file { getattr read };
+
+unix_socket_send(bluetooth, statsdw, statsd)
+unix_socket_send(bootstat, statsdw, statsd)
+unix_socket_send(platform_app, statsdw, statsd)
+unix_socket_send(radio, statsdw, statsd)
+unix_socket_send(statsd, statsdw, statsd)
+unix_socket_send(system_server, statsdw, statsd)
 
 ###
 ### neverallow rules
@@ -98,7 +109,7 @@ neverallow {
 # Only statsd and the other root services in limited circumstances.
 # can get to the files in /data/misc/stats-data, /data/misc/stats-service.
 # Other services are prohibitted from accessing the file.
-neverallow { domain -statsd -init -vold } stats_data_file:file *;
+neverallow { domain -statsd -system_server -init -vold } stats_data_file:file *;
 
 # Limited access to the directory itself.
-neverallow { domain -statsd -init -vold } stats_data_file:dir *;
+neverallow { domain -statsd -system_server -init -vold } stats_data_file:dir *;
