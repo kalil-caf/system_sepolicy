@@ -98,6 +98,9 @@ allow init configfs:dir mounton;
 allow init configfs:dir create_dir_perms;
 allow init configfs:{ file lnk_file } create_file_perms;
 
+# /metadata
+allow init metadata_file:dir mounton;
+
 # Use tmpfs as /data, used for booting when /data is encrypted
 allow init tmpfs:dir relabelfrom;
 
@@ -473,6 +476,10 @@ allow init system_data_file:lnk_file r_file_perms;
 
 # For init to be able to run shell scripts from vendor
 allow init vendor_shell_exec:file execute;
+
+# Metadata setup
+allow init vold_metadata_file:dir create_dir_perms;
+allow init vold_metadata_file:file getattr;
 
 ###
 ### neverallow rules

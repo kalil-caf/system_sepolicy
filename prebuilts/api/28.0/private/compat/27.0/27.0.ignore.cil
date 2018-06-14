@@ -14,6 +14,11 @@
     bpfloader_exec
     cgroup_bpf
     crossprofileapps_service
+    ctl_interface_restart_prop
+    ctl_interface_start_prop
+    ctl_interface_stop_prop
+    ctl_sigstop_prop
+    exfat
     exported2_config_prop
     exported2_default_prop
     exported2_radio_prop
@@ -39,12 +44,15 @@
     exported_wifi_prop
     fingerprint_vendor_data_file
     fs_bpf
+    hal_audiocontrol_hwservice
     hal_authsecret_hwservice
     hal_codec2_hwservice
     hal_confirmationui_hwservice
+    hal_evs_hwservice
     hal_lowpan_hwservice
     hal_secure_element_hwservice
     hal_usb_gadget_hwservice
+    hal_vehicle_hwservice
     hal_wifi_hostapd_hwservice
     incident_helper
     incident_helper_exec
@@ -53,6 +61,8 @@
     lowpan_prop
     lowpan_service
     mediaextractor_update_service
+    metadata_file
+    mnt_vendor_file
     network_watchlist_data_file
     network_watchlist_service
     perfetto
@@ -74,13 +84,17 @@
     statsd
     statsd_exec
     statsd_tmpfs
+    statsdw
+    statsdw_socket
     storaged_data_file
     system_boot_reason_prop
     system_update_service
+    test_boot_reason_prop
     tombstone_wifi_data_file
     trace_data_file
     traced
     traced_consumer_socket
+    traced_enabled_prop
     traced_exec
     traced_probes
     traced_probes_exec
@@ -96,11 +110,15 @@
     usbd_tmpfs
     vendor_default_prop
     vendor_init
+    vendor_security_patch_level_prop
     vendor_shell
     vold_metadata_file
     vold_prepare_subdirs
     vold_prepare_subdirs_exec
     vold_service
+    wait_for_keymaster
+    wait_for_keymaster_exec
+    wait_for_keymaster_tmpfs
     wm_trace_data_file
     wpantund
     wpantund_exec

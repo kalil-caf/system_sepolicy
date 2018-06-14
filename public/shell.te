@@ -30,8 +30,8 @@ allow shell trace_data_file:file { r_file_perms unlink };
 allow shell trace_data_file:dir { r_dir_perms remove_name write };
 
 # Access /data/misc/profman.
-allow shell profman_dump_data_file:dir { search getattr write remove_name };
-allow shell profman_dump_data_file:file { getattr unlink };
+allow shell profman_dump_data_file:dir { write remove_name r_dir_perms };
+allow shell profman_dump_data_file:file { unlink r_file_perms };
 
 # Read/execute files in /data/nativetest
 userdebug_or_eng(`
@@ -83,6 +83,9 @@ userdebug_or_eng(`
 
 # Read device's serial number from system properties
 get_prop(shell, serialno_prop)
+
+# Allow shell to read the vendor security patch level for CTS
+get_prop(shell, vendor_security_patch_level_prop)
 
 # Read state of logging-related properties
 get_prop(shell, device_logging_prop)

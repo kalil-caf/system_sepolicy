@@ -14,6 +14,10 @@
     bpfloader_exec
     cgroup_bpf
     crossprofileapps_service
+    ctl_interface_restart_prop
+    ctl_interface_start_prop
+    ctl_interface_stop_prop
+    ctl_sigstop_prop
     exfat
     exported2_config_prop
     exported2_default_prop
@@ -85,6 +89,7 @@
     storaged_data_file
     system_boot_reason_prop
     system_update_service
+    test_boot_reason_prop
     tombstone_wifi_data_file
     trace_data_file
     traced
@@ -105,11 +110,15 @@
     usbd_tmpfs
     vendor_default_prop
     vendor_init
+    vendor_security_patch_level_prop
     vendor_shell
     vold_metadata_file
     vold_prepare_subdirs
     vold_prepare_subdirs_exec
     vold_service
+    wait_for_keymaster
+    wait_for_keymaster_exec
+    wait_for_keymaster_tmpfs
     wm_trace_data_file
     wpantund
     wpantund_exec

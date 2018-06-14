@@ -16,6 +16,10 @@
     broadcastradio_service
     cgroup_bpf
     crossprofileapps_service
+    ctl_interface_restart_prop
+    ctl_interface_start_prop
+    ctl_interface_stop_prop
+    ctl_sigstop_prop
     e2fs
     e2fs_exec
     exfat
@@ -100,6 +104,7 @@
     system_boot_reason_prop
     system_net_netd_hwservice
     system_update_service
+    test_boot_reason_prop
     thermal_service
     thermalcallback_hwservice
     thermalserviced
@@ -123,6 +128,7 @@
     untrusted_app_all_devpts
     update_engine_log_data_file
     vendor_default_prop
+    vendor_security_patch_level_prop
     usbd
     usbd_exec
     usbd_tmpfs
@@ -132,6 +138,9 @@
     vold_prepare_subdirs
     vold_prepare_subdirs_exec
     vold_service
+    wait_for_keymaster
+    wait_for_keymaster_exec
+    wait_for_keymaster_tmpfs
     wpantund
     wpantund_exec
     wpantund_service

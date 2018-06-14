@@ -38,6 +38,7 @@ attribute vendor_file_type;
 
 # All types used for procfs files.
 attribute proc_type;
+expandattribute proc_type false;
 
 # All types used for sysfs files.
 attribute sysfs_type;
@@ -68,6 +69,11 @@ attribute core_property_type;
 
 # All properties used to configure log filtering.
 attribute log_property_type;
+
+# All properties that are not specific to device but are added from
+# outside of AOSP. (e.g. OEM-specific properties)
+# These properties are not accessible from device-specific domains
+attribute extended_core_property_type;
 
 # All service_manager types created by system_server
 attribute system_server_service;
@@ -165,6 +171,12 @@ expandattribute data_between_core_and_vendor_violators false;
 attribute system_executes_vendor_violators;
 expandattribute system_executes_vendor_violators false;
 
+# All system domains which violate the requirement of not writing vendor
+# properties.
+# TODO(b/78598545): Remove this once there are no violations
+attribute system_writes_vendor_properties_violators;
+expandattribute system_writes_vendor_properties_violators false;
+
 # hwservices that are accessible from untrusted applications
 # WARNING: Use of this attribute should be avoided unless
 # absolutely necessary.  It is a temporary allowance to aid the
@@ -206,6 +218,12 @@ attribute halserverdomain;
 attribute halclientdomain;
 expandattribute halclientdomain true;
 
+# Exempt for halserverdomain to access sockets. Only builds for automotive
+# device types are allowed to use this attribute (enforced by CTS).
+# Unlike phone, in a car many modules are external from Android perspective and
+# HALs should be able to communicate with those devices through sockets.
+attribute hal_automotive_socket_exemption;
+
 # TODO(b/72757373): Use hal_attribute macro once expandattribute value conflicts
 # can be resolve.
 attribute hal_audio;
@@ -240,6 +258,7 @@ expandattribute hal_cas_server false;
 
 # HALs
 hal_attribute(allocator);
+hal_attribute(audiocontrol);
 hal_attribute(authsecret);
 hal_attribute(bluetooth);
 hal_attribute(broadcastradio);
@@ -247,6 +266,7 @@ hal_attribute(configstore);
 hal_attribute(confirmationui);
 hal_attribute(contexthub);
 hal_attribute(dumpstate);
+hal_attribute(evs);
 hal_attribute(fingerprint);
 hal_attribute(gatekeeper);
 hal_attribute(gnss);
@@ -271,6 +291,7 @@ hal_attribute(tv_cec);
 hal_attribute(tv_input);
 hal_attribute(usb);
 hal_attribute(usb_gadget);
+hal_attribute(vehicle);
 hal_attribute(vibrator);
 hal_attribute(vr);
 hal_attribute(weaver);
